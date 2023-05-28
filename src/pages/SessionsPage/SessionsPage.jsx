@@ -1,62 +1,55 @@
-import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function SessionsPage() {
-  const URL =
-    "https://mock-api.driven.com.br/api/v8/cineflex/movies/ID_DO_FILME/showtimes";
+  const [sessoes, setSessoes] = useState(undefined);
+  const [filme, setFilme] = useState(undefined);
+  const parametro = useParams();
 
   useEffect(() => {
-    const promise = axios.get(URL);
+    const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${parametro.idFilme}/showtimes`;
+    const promise = axios.get(url);
 
-    promise.then((lista) => {
-      console.log(lista.data);
+    promise.then((listaSessoes) => {
+      //console.log(listaSessoes.data);
+
+      setFilme(listaSessoes.data);
+      setSessoes(listaSessoes.data.days);
     });
 
     promise.catch((erro) => {
       console.log(erro.response.data);
-    }); // se der erro no recebimento dos dados isso aqui vai ser executado (criar uma função para caso de erro)
+    });
   }, []);
-  
+
+  if (sessoes === undefined) {
+    return <div>Carregando</div>;
+  } //ajustar com useNavigate()
+
   return (
     <PageContainer>
       Selecione o horário
       <div>
-        <SessionContainer>
-          Sexta - 03/03/2023
-          <ButtonsContainer>
-            <button>14:00</button>
-            <button>15:00</button>
-          </ButtonsContainer>
-        </SessionContainer>
-
-        <SessionContainer>
-          Sexta - 03/03/2023
-          <ButtonsContainer>
-            <button>14:00</button>
-            <button>15:00</button>
-          </ButtonsContainer>
-        </SessionContainer>
-
-        <SessionContainer>
-          Sexta - 03/03/2023
-          <ButtonsContainer>
-            <button>14:00</button>
-            <button>15:00</button>
-          </ButtonsContainer>
-        </SessionContainer>
+        {sessoes.map((sessoes) => (
+          <SessionContainer>
+            {sessoes.weekday} - {sessoes.date}
+            <ButtonsContainer>
+              {sessoes.showtimes.map((sessoes) => (
+                <button>{sessoes.name}</button>
+              ))}
+            </ButtonsContainer>
+          </SessionContainer>
+        ))}
       </div>
       <FooterContainer>
         <div>
-          <img
-            src={
-              "https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"
-            }
-            alt="poster"
-          />
+          <img src={filme.posterURL} alt="poster" />
         </div>
         <div>
-          <p>Tudo em todo lugar ao mesmo tempo</p>
+          <p>{filme.title}</p>
         </div>
       </FooterContainer>
     </PageContainer>
@@ -97,6 +90,7 @@ const ButtonsContainer = styled.div`
     text-decoration: none;
   }
 `;
+
 const FooterContainer = styled.div`
   width: 100%;
   height: 120px;

@@ -1,11 +1,17 @@
 import styled from "styled-components";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 export default function SeatsPage() {
-  const URL = "https://mock-api.driven.com.br/api/v8/cineflex/movies";
   
+  
+ /* const parametro = useParams()
+  console.log(parametro);
+
   useEffect(() => {
+    const URL = "https://mock-api.driven.com.br/api/v8/cineflex/movies";
     const promise = axios.get(URL);
+    
 
     promise.then((listaFilmes) => {
       console.log(listaFilmes.data);
@@ -15,7 +21,8 @@ export default function SeatsPage() {
     promise.catch((erro) => {
       console.log(erro.reponse.data);
     });
-  });
+  }, []);*/
+
   return (
     <PageContainer>
       Selecione o(s) assento(s)

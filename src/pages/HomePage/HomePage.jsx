@@ -1,5 +1,6 @@
-import styled from "styled-components";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import styled from "styled-components";
 import axios from "axios";
 
 export default function HomePage() {
@@ -10,7 +11,6 @@ export default function HomePage() {
     const promise = axios.get(URL);
 
     promise.then((listaFilmes) => {
-      console.log(listaFilmes.data);
       setImgFilme(listaFilmes.data);
     });
 
@@ -18,21 +18,21 @@ export default function HomePage() {
       console.log(erro.reponse.data);
     });
   }, []);
- 
-if (imgFilme.length === 0){
-  return (
-    <div>carregando</div> //substituir por gif
-  )
-}
+
+  if (imgFilme.length === 0) {
+    return <div>carregando</div>;
+  } //ajustar com useNavigate()
 
   return (
     <PageContainer>
       Selecione o filme
-      <ListContainer key={imgFilme.id}>
+      <ListContainer>
         {imgFilme.map((imgFilme) => (
-          <MovieContainer>
-            <img src={imgFilme.posterURL} alt="poster" />
-          </MovieContainer>
+          <Link key={imgFilme.id} to={`/sessoes/${imgFilme.id}`}>
+            <MovieContainer>
+              <img src={imgFilme.posterURL} alt="poster" />
+            </MovieContainer>
+          </Link>
         ))}
       </ListContainer>
     </PageContainer>
