@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function SessionsPage() {
   const [sessoes, setSessoes] = useState(undefined);
-  const [filme, setFilme] = useState(null);
+  const [footer, setFooter] = useState(null);
   const { idFilme } = useParams();
 
   useEffect(() => {
@@ -14,9 +14,8 @@ export default function SessionsPage() {
     const promise = axios.get(url);
 
     promise.then((listaSessoes) => {
-      console.log(listaSessoes.data);
-
-      setFilme(listaSessoes.data);
+      //console.log(listaSessoes.data);
+      setFooter(listaSessoes.data);
       setSessoes(listaSessoes.data);
     });
 
@@ -38,12 +37,8 @@ export default function SessionsPage() {
             {sessoes.weekday} - {sessoes.date}
             <ButtonsContainer>
               {sessoes.showtimes.map((sessoes) => (
-                <Link
-                  data-teste="showtime"
-                  key={sessoes.id}
-                  to={`/assentos/${sessoes.id}`}
-                >
-                  <button>{sessoes.name}</button>
+                <Link key={sessoes.id} to={`/assentos/${sessoes.id}`}>
+                  <button data-teste="showtime">{sessoes.name}</button>
                 </Link>
               ))}
             </ButtonsContainer>
@@ -52,10 +47,11 @@ export default function SessionsPage() {
       </div>
       <FooterContainer>
         <div>
-          <img data-test="footer" src={filme.posterURL} alt="poster" />
+          <img data-test="footer" src={footer.posterURL} alt="poster" />
         </div>
+
         <div>
-          <p>{filme.title}</p>
+          <p>{footer.title}</p>
         </div>
       </FooterContainer>
     </PageContainer>

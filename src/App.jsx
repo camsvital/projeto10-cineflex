@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 
-import HomePage from './pages/HomePage/HomePage';
-import SeatsPage from './pages/SeatsPage/SeatsPage';
-import SessionsPage from './pages/SessionsPage/SessionsPage';
-import SuccessPage from './pages/SuccessPage/SuccessPage';
+import HomePage from './pages/HomePage';
+import SeatsPage from './pages/SeatsPage';
+import SessionsPage from './pages/SessionsPage';
+import SuccessPage from './pages/SuccessPage';
 import NavBar from './components/NavBar';
 
 
