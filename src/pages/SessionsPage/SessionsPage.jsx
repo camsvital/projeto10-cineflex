@@ -6,18 +6,18 @@ import axios from "axios";
 
 export default function SessionsPage() {
   const [sessoes, setSessoes] = useState(undefined);
-  const [filme, setFilme] = useState(undefined);
-  const parametro = useParams();
+  const [filme, setFilme] = useState(null);
+  const { idFilme } = useParams();
 
   useEffect(() => {
-    const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${parametro.idFilme}/showtimes`;
+    const url = `https://mock-api.driven.com.br/api/v8/cineflex/movies/${idFilme}/showtimes`;
     const promise = axios.get(url);
 
     promise.then((listaSessoes) => {
-      //console.log(listaSessoes.data);
+      console.log(listaSessoes.data);
 
       setFilme(listaSessoes.data);
-      setSessoes(listaSessoes.data.days);
+      setSessoes(listaSessoes.data);
     });
 
     promise.catch((erro) => {
@@ -33,12 +33,18 @@ export default function SessionsPage() {
     <PageContainer>
       Selecione o horário
       <div>
-        {sessoes.map((sessoes) => (
-          <SessionContainer>
+        {sessoes.days.map((sessoes) => (
+          <SessionContainer data-test="movie-day" key={sessoes.id}>
             {sessoes.weekday} - {sessoes.date}
             <ButtonsContainer>
               {sessoes.showtimes.map((sessoes) => (
-                <button>{sessoes.name}</button>
+                <Link
+                  data-teste="showtime"
+                  key={sessoes.id}
+                  to={`/assentos/${sessoes.id}`}
+                >
+                  <button>{sessoes.name}</button>
+                </Link>
               ))}
             </ButtonsContainer>
           </SessionContainer>
@@ -46,7 +52,7 @@ export default function SessionsPage() {
       </div>
       <FooterContainer>
         <div>
-          <img src={filme.posterURL} alt="poster" />
+          <img data-test="footer" src={filme.posterURL} alt="poster" />
         </div>
         <div>
           <p>{filme.title}</p>

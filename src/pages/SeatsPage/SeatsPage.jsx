@@ -1,52 +1,69 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function SeatsPage() {
-  
-  
- /* const parametro = useParams()
-  console.log(parametro);
+  const { idSessao } = useParams();
+  const [sessao, setSessao] = useState(undefined);
+  const [selecionados, setSelecionados] = useState([]);
+  const [nome, setNome] = useState("");
+  const [cpf, setCPF] = useState("");
+  const [filme, setFilme] = useState(null);
 
   useEffect(() => {
-    const URL = "https://mock-api.driven.com.br/api/v8/cineflex/movies";
-    const promise = axios.get(URL);
-    
+    const link = `https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`;
+    const promise = axios.get(link);
 
-    promise.then((listaFilmes) => {
-      console.log(listaFilmes.data);
-      setImgFilme(listaFilmes.data);
+    promise.then((listaAssentos) => {
+      setFilme(listaAssentos.data);
+      setSessao(listaAssentos.data.seats);
+      //console.log(listaAssentos.data);
     });
 
     promise.catch((erro) => {
       console.log(erro.reponse.data);
     });
-  }, []);*/
+  }, []);
+
+  function reservarAssentos(assento) {
+    if (selecionado) {
+      const novoSelecionados = selecionados.filter((s) => s.id !== assento.id);
+      setSelecionados(novoSelecionados);
+    } else {
+      setSelecionados([...selecionados, assento]);
+    }
+  }
+
+  if (sessao === undefined) {
+    return <div>Carregando</div>;
+  }
 
   return (
     <PageContainer>
       Selecione o(s) assento(s)
       <SeatsContainer>
-        <SeatItem>01</SeatItem>
-        <SeatItem>02</SeatItem>
-        <SeatItem>03</SeatItem>
-        <SeatItem>04</SeatItem>
-        <SeatItem>05</SeatItem>
+        {sessao.map((sessao) => (
+          <SeatItem>{sessao.name}</SeatItem>
+        ))}
+
+        <CaptionContainer>
+          <CaptionItem>
+            <CaptionCircle status="selecionado" />
+            Selecionado
+          </CaptionItem>
+          <CaptionItem>
+            <CaptionCircle status="disponivel" />
+            Disponível
+          </CaptionItem>
+          <CaptionItem>
+            <CaptionCircle status="indisponivel" />
+            Indisponível
+          </CaptionItem>
+        </CaptionContainer>
       </SeatsContainer>
-      <CaptionContainer>
-        <CaptionItem>
-          <CaptionCircle />
-          Selecionado
-        </CaptionItem>
-        <CaptionItem>
-          <CaptionCircle />
-          Disponível
-        </CaptionItem>
-        <CaptionItem>
-          <CaptionCircle />
-          Indisponível
-        </CaptionItem>
-      </CaptionContainer>
       <FormContainer>
         Nome do Comprador:
         <input placeholder="Digite seu nome..." />
@@ -56,16 +73,13 @@ export default function SeatsPage() {
       </FormContainer>
       <FooterContainer>
         <div>
-          <img
-            src={
-              "https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"
-            }
-            alt="poster"
-          />
+          <img data-test="footer" src={filme.movie.posterURL} alt="poster" />
         </div>
         <div>
-          <p>Tudo em todo lugar ao mesmo tempo</p>
-          <p>Sexta - 14h00</p>
+          <p>{filme.movie.title}</p>
+          <p>
+            {filme.day.weekday} - {filme.name}
+          </p>
         </div>
       </FooterContainer>
     </PageContainer>

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 
 export default function HomePage() {
-  const [imgFilme, setImgFilme] = useState([]);
+  const [imgFilme, setImgFilme] = useState(undefined);
 
   useEffect(() => {
     const URL = "https://mock-api.driven.com.br/api/v8/cineflex/movies";
@@ -19,7 +19,7 @@ export default function HomePage() {
     });
   }, []);
 
-  if (imgFilme.length === 0) {
+  if (imgFilme === undefined) {
     return <div>carregando</div>;
   } //ajustar com useNavigate()
 
@@ -29,7 +29,7 @@ export default function HomePage() {
       <ListContainer>
         {imgFilme.map((imgFilme) => (
           <Link key={imgFilme.id} to={`/sessoes/${imgFilme.id}`}>
-            <MovieContainer>
+            <MovieContainer data-test="movie">
               <img src={imgFilme.posterURL} alt="poster" />
             </MovieContainer>
           </Link>
