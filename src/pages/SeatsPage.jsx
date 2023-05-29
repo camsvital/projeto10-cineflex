@@ -84,7 +84,7 @@ export default function SeatsPage() {
         <SeatsContainer>
           {sessao.map((sessao) => (
             <SeatItem
-              data-teste="seat"
+              data-test="seat"
               onClick={() => escolherAssento(sessao.id, sessao.isAvailable)}
               disponivel={sessao.isAvailable}
               key={sessao.id}
